@@ -36,23 +36,10 @@
         textarea:focus {
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
-        .modal-content {
-            animation: slideIn 0.5s ease-out;
-        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
             }
             to {
                 opacity: 1;
@@ -78,23 +65,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="responseModalLabel">Analysis Result</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="modalBody">
-                    <!-- Response will be displayed here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="notification" class="alert d-none" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 300px;"></div>
 
     <script>
         document.getElementById('payloadForm').addEventListener('submit', function (e) {
@@ -110,13 +81,29 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    const modalBody = document.getElementById('modalBody');
-                    modalBody.textContent = `${data.message}`;
-                    const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
-                    responseModal.show();
+                    console.log('Server Response:', data); // Debugging: Log the response
+                    const notification = document.getElementById('notification');
+                    if (data.message) {
+                        notification.textContent = data.message;
+                        notification.className = `alert ${data.status === 'malicious' ? 'alert-danger' : 'alert-success'}`;
+                    } else {
+                        notification.textContent = 'No message received from the server.';
+                        notification.className = 'alert alert-warning';
+                    }
+                    notification.classList.remove('d-none');
+                    setTimeout(() => {
+                        notification.classList.add('d-none');
+                    }, 5000); // Hide the notification after 5 seconds
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    const notification = document.getElementById('notification');
+                    notification.textContent = 'An error occurred while processing your request.';
+                    notification.className = 'alert alert-danger';
+                    notification.classList.remove('d-none');
+                    setTimeout(() => {
+                        notification.classList.add('d-none');
+                    }, 5000); // Hide the notification after 5 seconds
                 });
         });
     </script>
