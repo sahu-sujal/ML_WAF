@@ -1,0 +1,47 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+*.env
+
+# Logs and database files
+instance/
+*.log
+*.sqlite3
+
+# Cache
+*.cache
+*.pytest_cache/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Flask specific
+*.pid
+
+# Deployment
+*.bak
+*.orig
+
+# Pytest and coverage
+.coverage
+htmlcov/
+.tox/
+
+# Docker
+*.dockerignore
+docker-compose.override.yml
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Other
+.DS_Store
