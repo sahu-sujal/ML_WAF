@@ -1,5 +1,3 @@
-docker build -t flask-project .
-docker run -p 5000:5000 flask-project# Use Python base image
 FROM python:3.9-slim
 
 # Set working directory
