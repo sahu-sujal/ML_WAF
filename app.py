@@ -4,12 +4,11 @@ import numpy as np
 import string
 import joblib
 
-
 sql_keywords = pd.read_csv('static/SQLKeywords.txt', index_col=False)
 js_keywords = pd.read_csv("static/JavascriptKeywords.txt", index_col=False)
 
 # Load the pre-trained model
-xgb_classifer = joblib.load('model/xgb_classifier.pkl')
+xgb_classifier = joblib.load('model/xgb_classifier.pkl')
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -29,13 +28,33 @@ def calculate_features_and_predict(payload):
     features['sql-keywords'] = len([1 for keyword in sql_keywords['Keyword'] if str(keyword).lower() in payload.lower()])
     features['js-keywords'] = len([1 for keyword in js_keywords['Keyword'] if str(keyword).lower() in payload.lower()])
     payload_df = pd.DataFrame(features, index=[0])
-    result = xgb_classifer.predict(payload_df)
+    result = xgb_classifier.predict(payload_df)
     return result[0]
 
 # Define routes
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('index.html', title="Home")
+
+@app.route('/xss')
+def xss():
+    return render_template('xss.html', title="XSS Protection")
+
+@app.route('/sqli')
+def sqli():
+    return render_template('sqli.html', title="SQL Injection Protection")
+
+@app.route('/html-injection')
+def html_injection():
+    return render_template('html_injection.html', title="HTML Injection Protection")
+
+@app.route('/iframe-injection')
+def iframe_injection():
+    return render_template('iframe_injection.html', title="Iframe Injection Protection")
+
+@app.route('/command-injection')
+def command_injection():
+    return render_template('command_injection.html', title="Command Injection Protection")
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -43,7 +62,7 @@ def predict():
     payload = data.get('payload', '')
     result = calculate_features_and_predict(payload)
     if result > 0:
-        return jsonify({"status": "malicious", "message": "Attack detected - 403 Forbidden"})
+        return jsonify({"status": "malicious", "message": "Attack detected by Firewall - 403 Forbidden"})
     else:
         return jsonify({"status": "safe", "message": "Your payload is safe - 200 OK"})
 

@@ -1,112 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML-Based Web Application Firewall</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            margin-top: 50px;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .card {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            background-color: #ffffff;
-            color: #333;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        textarea {
-            transition: box-shadow 0.3s ease;
-        }
-        textarea:focus {
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="text-center mb-4">
-            <h1 class="display-4">ML-Based Web Application Firewall</h1>
-            <p class="lead">Analyze your payloads for potential security threats.</p>
-        </div>
-        <div class="card p-4">
-            <form id="payloadForm">
-                <div class="mb-3">
-                    <label for="payload" class="form-label">Enter Payload</label>
-                    <textarea class="form-control" id="payload" name="payload" rows="4" placeholder="Enter your payload here..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Analyze Payload</button>
-            </form>
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5 mt-4">
+    <h1 class="display-4 fw-bold" style="color: #4caf50;">ML-Based Web Application Firewall</h1>
+    <p class="lead fs-4">Analyze your payloads for potential security threats.</p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 p-4 shadow border-0 hover-card">
+            <i class="fas fa-code fa-3x mb-3 text-primary"></i>
+            <h4 class="fw-bold">XSS Protection</h4>
+            <p class="fs-5">Detect and block Cross-Site Scripting attacks.</p>
+            <div class="mt-auto pt-3">
+                <a href="{{ url_for('xss') }}" class="btn btn-primary fw-bold py-2 px-4">Test XSS <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
         </div>
     </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 p-4 shadow border-0 hover-card">
+            <i class="fas fa-database fa-3x mb-3 text-primary"></i>
+            <h4 class="fw-bold">SQL Injection Protection</h4>
+            <p class="fs-5">Prevent unauthorized database access.</p>
+            <div class="mt-auto pt-3">
+                <a href="{{ url_for('sqli') }}" class="btn btn-primary fw-bold py-2 px-4">Test SQL Injection <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 p-4 shadow border-0 hover-card">
+            <i class="fas fa-file-code fa-3x mb-3 text-primary"></i>
+            <h4 class="fw-bold">HTML Injection Protection</h4>
+            <p class="fs-5">Secure your application from HTML injection attacks.</p>
+            <div class="mt-auto pt-3">
+                <a href="{{ url_for('html_injection') }}" class="btn btn-primary fw-bold py-2 px-4">Test HTML Injection <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <div id="notification" class="alert d-none" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 300px;"></div>
+<div class="row mb-5">
+    <div class="col-md-6 text-center mb-4">
+        <div class="card h-100 p-4 shadow border-0 hover-card">
+            <i class="fas fa-window-maximize fa-3x mb-3 text-primary"></i>
+            <h4 class="fw-bold">Iframe Injection Protection</h4>
+            <p class="fs-5">Protect against malicious iframe embedding attempts.</p>
+            <div class="mt-auto pt-3">
+                <a href="{{ url_for('iframe_injection') }}" class="btn btn-primary fw-bold py-2 px-4">Test Iframe Injection <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 text-center mb-4">
+        <div class="card h-100 p-4 shadow border-0 hover-card">
+            <i class="fas fa-terminal fa-3x mb-3 text-primary"></i>
+            <h4 class="fw-bold">Command Injection Protection</h4>
+            <p class="fs-5">Prevent attackers from executing system commands.</p>
+            <div class="mt-auto pt-3">
+                <a href="{{ url_for('command_injection') }}" class="btn btn-primary fw-bold py-2 px-4">Test Command Injection <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        document.getElementById('payloadForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const payload = document.getElementById('payload').value;
+<div class="card p-4 mb-5 shadow border-0">
+    <div class="card-header d-flex justify-content-between align-items-center rounded p-3" style="background-color: #1a1a1a; border-bottom: 2px solid #4caf50;">
+        <h5 class="mb-0 fw-bold fs-4 text-primary">Quick Payload Analysis</h5>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="aiToggle" checked style="width: 3rem; height: 1.5rem;">
+            <label class="form-check-label ms-2 fs-5" for="aiToggle">AI Analysis</label>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form id="payloadForm">
+            <div class="mb-4">
+                <label for="payload" class="form-label fw-bold fs-5 mb-2">Enter Payload</label>
+                <textarea class="form-control border-2 shadow-sm" id="payload" name="payload" rows="5" placeholder="Enter your payload here..." style="font-size: 1.1rem; border-color: #4caf50;"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold fs-5 shadow"><i class="fas fa-search me-2"></i>Analyze Payload</button>
+        </form>
+    </div>
+</div>
 
-            fetch('/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ payload }),
+<div id="payloadDisplay" class="payload-display d-none alert fs-4 text-center fw-bold shadow-lg p-4" style="background-color: #1a1a1a; border: 1px solid #4caf50; color: #e0e0e0;"></div>
+
+<!-- Popup Modal -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #212121; border: 1px solid #4caf50;">
+            <div class="modal-header" style="border-bottom: 1px solid #4caf50;">
+                <h5 class="modal-title fs-4 fw-bold text-primary" id="resultModalLabel">Analysis Result</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fs-5 p-4">
+                <!-- Result message will be inserted here -->
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #4caf50;">
+                <button type="button" class="btn btn-primary fw-bold py-2 px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('payloadForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const payload = document.getElementById('payload').value;
+        const aiToggle = document.getElementById('aiToggle').checked;
+        
+        // Create and show loading spinner
+        const payloadDisplay = document.getElementById('payloadDisplay');
+        payloadDisplay.classList.remove('d-none');
+        payloadDisplay.innerHTML = '<div class="spinner-border text-primary me-2" role="status"></div> Analyzing payload...';
+        
+        if (!aiToggle) {
+            payloadDisplay.innerHTML = '<span class="text-warning">AI analysis is disabled. Enable it for protection.</span>';
+            return;
+        }
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                payloadDisplay.classList.remove('d-none', 'alert-info', 'alert-danger', 'alert-success');
+                payloadDisplay.classList.add(data.status === 'malicious' ? 'alert-danger' : 'alert-success');
+                payloadDisplay.innerHTML = data.message;
+                
+                // Also show in modal
+                const modalBody = document.querySelector('.modal-body');
+                modalBody.innerHTML = data.message;
+                const myModal = new bootstrap.Modal(document.getElementById('resultModal'));
+                myModal.show();
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Server Response:', data); // Debugging: Log the response
-                    const notification = document.getElementById('notification');
-                    if (data.message) {
-                        notification.textContent = data.message;
-                        notification.className = `alert ${data.status === 'malicious' ? 'alert-danger' : 'alert-success'}`;
-                    } else {
-                        notification.textContent = 'No message received from the server.';
-                        notification.className = 'alert alert-warning';
-                    }
-                    notification.classList.remove('d-none');
-                    setTimeout(() => {
-                        notification.classList.add('d-none');
-                    }, 5000); // Hide the notification after 5 seconds
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    const notification = document.getElementById('notification');
-                    notification.textContent = 'An error occurred while processing your request.';
-                    notification.className = 'alert alert-danger';
-                    notification.classList.remove('d-none');
-                    setTimeout(() => {
-                        notification.classList.add('d-none');
-                    }, 5000); // Hide the notification after 5 seconds
-                });
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+            .catch(error => {
+                console.error('Error:', error);
+                payloadDisplay.classList.remove('d-none', 'alert-info', 'alert-success');
+                payloadDisplay.classList.add('alert-danger');
+                payloadDisplay.innerHTML = 'Error analyzing payload. Please try again.';
+            });
+    });
+</script>
+
+<style>
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #333333 !important;
+    }
+    .hover-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6) !important;
+        border-color: #4caf50 !important;
+    }
+    .payload-display {
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.2rem;
+    }
+    .alert-info {
+        background-color: rgba(76, 175, 80, 0.1);
+        border-color: #4caf50;
+        color: #e0e0e0;
+    }
+    .alert-success {
+        background-color: rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+    .alert-danger {
+        background-color: rgba(244, 67, 54, 0.2);
+        border-color: #f44336;
+        color: #f44336;
+    }
+    .alert-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+    .form-check-input:checked {
+        background-color: #4caf50;
+        border-color: #4caf50;
+    }
+    .spinner-border {
+        color: #4caf50 !important;
+    }
+</style>
+{% endblock %}

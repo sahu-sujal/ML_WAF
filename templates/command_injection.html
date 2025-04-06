@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold fs-1">Command Injection Protection</h2>
+    <p class="text-center fs-5 mb-4">Test your command injection payloads to see if the AI model can detect and block them.</p>
+    
+    <div class="card p-4 shadow-lg border-0 mb-4">
+        <div class="card-header bg-dark text-primary fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-info-circle me-2"></i> About Command Injection
+        </div>
+        <div class="card-body">
+            <p class="fs-5">Command injection occurs when an attacker is able to execute arbitrary system commands on the host operating system via a vulnerable application. Key risks include:</p>
+            <ul class="fs-5">
+                <li>Execution of arbitrary system commands with application privileges</li>
+                <li>Access to sensitive information on the server</li>
+                <li>Modification or deletion of critical files</li>
+                <li>Complete system compromise</li>
+            </ul>
+            <p class="fs-5">Common attack vectors include:</p>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">ping 192.168.1.1; cat /etc/passwd</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">127.0.0.1 | ls -la</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">filename.txt; rm -rf /</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 shadow-lg border-0">
+        <form id="commandInjectionForm">
+            <div class="mb-4">
+                <label for="command" class="form-label fw-bold fs-4 mb-2 text-primary">Command to Execute</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark text-light border-0" id="basic-addon1">ping</span>
+                    <input type="text" class="form-control border-primary shadow-sm" id="payload" name="payload" placeholder="Enter a hostname or IP address" style="font-size: 1.1rem;" aria-describedby="commandHelp">
+                </div>
+                <div id="commandHelp" class="form-text text-muted">This form simulates a ping utility that could be vulnerable to command injection.</div>
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input border-primary" type="checkbox" id="aiToggle" checked style="width: 1.5rem; height: 1.5rem;">
+                <label class="form-check-label fw-bold fs-5 ms-2 text-primary" for="aiToggle">Enable AI Protection</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-3 fs-4 fw-bold shadow">
+                <i class="fas fa-terminal me-2"></i> Execute Command
+            </button>
+        </form>
+    </div>
+    
+    <div id="payloadDisplay" class="payload-display d-none mt-4 fs-4 p-4 shadow-lg"></div>
+    
+    <div id="commandResultContainer" class="mt-4 d-none">
+        <div class="card p-4 shadow-lg border-0">
+            <div class="card-header bg-warning text-dark fw-bold fs-4 mb-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fas fa-terminal me-2"></i> Command Execution (Simulated)
+                </div>
+                <div class="badge bg-dark text-warning">Server: vulnerable-server</div>
+            </div>
+            <div class="card-body p-0">
+                <div id="commandOutput" class="bg-dark text-light p-3 rounded" style="min-height: 200px; font-family: 'Courier New', monospace; overflow-x: auto;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card p-4 shadow-lg border-0 mt-4">
+        <div class="card-header bg-dark text-warning fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-shield-alt me-2"></i> Command Injection Prevention
+        </div>
+        <div class="card-body">
+            <p class="fs-5">To protect against command injection attacks, consider the following measures:</p>
+            <ul class="fs-5">
+                <li>Avoid using system commands with user input when possible</li>
+                <li>Use parameterized APIs and avoid shell commands</li>
+                <li>Implement strong input validation using allowlists</li>
+                <li>Run applications with least privilege</li>
+                <li>Use language-specific libraries instead of executing commands</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('commandInjectionForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const payload = document.getElementById('payload').value;
+        const aiToggle = document.getElementById('aiToggle').checked;
+        
+        // Show loading indicator
+        const payloadDisplay = document.getElementById('payloadDisplay');
+        payloadDisplay.classList.remove('d-none');
+        payloadDisplay.textContent = "Analyzing command payload...";
+        payloadDisplay.className = 'payload-display alert alert-info mt-4 fs-4 p-4 shadow-lg';
+        
+        // Hide previous command results
+        document.getElementById('commandResultContainer').classList.add('d-none');
+        const commandOutput = document.getElementById('commandOutput');
+        commandOutput.innerHTML = '';
+        
+        if (!aiToggle) {
+            // Display warning
+            payloadDisplay.textContent = "⚠️ AI protection is disabled! Simulating command execution without protection. ⚠️";
+            payloadDisplay.className = 'payload-display alert alert-warning mt-4 fs-4 p-4 shadow-lg';
+            
+            // Show command result container
+            const commandResultContainer = document.getElementById('commandResultContainer');
+            commandResultContainer.classList.remove('d-none');
+            
+            // Check for command injection patterns
+            const hasInjection = /[;&|`\n$(){}[\]<>\\]/.test(payload);
+            const hasCommands = /(cat|ls|rm|chmod|wget|curl|bash|sh|nc|pwd|whoami|id|ifconfig|echo|eval|exec|system)/.test(payload.toLowerCase());
+            
+            // Simulate command execution
+            let output = '';
+            const fullCommand = 'ping ' + payload;
+            
+            commandOutput.innerHTML += `<div class="mb-2 text-warning"># ${fullCommand}</div>`;
+            
+            if (hasInjection || hasCommands) {
+                // Simulate successful command injection
+                if (payload.includes(';') || payload.includes('|') || payload.includes('&&')) {
+                    // Ping output
+                    output += `PING ${payload.split(/[;&|]/)[0].trim()} (127.0.0.1): 56 data bytes\n64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.039 ms\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.041 ms\n\n`;
+                    
+                    // Added injected command output
+                    if (payload.toLowerCase().includes('cat /etc/passwd')) {
+                        output += '# Command injection successful!\n\nroot:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\n';
+                    } else if (payload.toLowerCase().includes('ls')) {
+                        output += '# Command injection successful!\n\napp.py\nmodels\nrequirements.txt\nstatic\ntemplates\nREADME.md\n.gitignore\nconfig.ini\ndatabase.db\n';
+                    } else if (payload.toLowerCase().includes('whoami') || payload.toLowerCase().includes('id')) {
+                        output += '# Command injection successful!\n\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\n';
+                    } else if (payload.toLowerCase().includes('rm')) {
+                        output += '# Command injection successful!\n\nAttempting to remove files...\nOperation not permitted for some files.\n';
+                    } else {
+                        output += '# Command injection successful!\n\nCommand executed with unknown output\n';
+                    }
+                } else {
+                    // Just show suspicious input warning
+                    output += `Warning: Possible malicious input detected: ${payload}\nCommand execution aborted.\n`;
+                }
+            } else {
+                // Normal ping output for safe input
+                output += `PING ${payload} (127.0.0.1): 56 data bytes\n64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.039 ms\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.041 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.037 ms\n64 bytes from 127.0.0.1: icmp_seq=3 ttl=64 time=0.042 ms\n\n--- ${payload} ping statistics ---\n4 packets transmitted, 4 packets received, 0.0% packet loss\nround-trip min/avg/max/stddev = 0.037/0.040/0.042/0.002 ms\n`;
+            }
+            
+            // Add output line by line with delay for effect
+            const lines = output.split('\n');
+            let i = 0;
+            
+            function addLine() {
+                if (i < lines.length) {
+                    commandOutput.innerHTML += lines[i] + '\n';
+                    commandOutput.scrollTop = commandOutput.scrollHeight;
+                    i++;
+                    setTimeout(addLine, 100);
+                }
+            }
+            
+            addLine();
+            return;
+        }
+        
+        // AI Protection is enabled
+        fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload }),
+        })
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => ({ data, isJson: true }));
+                } else {
+                    return response.text().then(text => ({ data: text, isJson: false }));
+                }
+            })
+            .then(result => {
+                payloadDisplay.classList.remove('d-none');
+                
+                if (result.isJson) {
+                    // Handle JSON response
+                    const data = result.data;
+                    payloadDisplay.textContent = data.message;
+                    payloadDisplay.className = data.status === 'malicious' 
+                        ? 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg' 
+                        : 'payload-display alert alert-success mt-4 fs-4 p-4 shadow-lg';
+                    
+                    // If safe, show simulated command output
+                    if (data.status === 'safe') {
+                        // Show command result container
+                        const commandResultContainer = document.getElementById('commandResultContainer');
+                        commandResultContainer.classList.remove('d-none');
+                        
+                        // Generate safe ping output
+                        const fullCommand = 'ping ' + payload;
+                        commandOutput.innerHTML += `<div class="mb-2 text-warning"># ${fullCommand}</div>`;
+                        
+                        const output = `PING ${payload} (127.0.0.1): 56 data bytes\n64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.039 ms\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.041 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.037 ms\n64 bytes from 127.0.0.1: icmp_seq=3 ttl=64 time=0.042 ms\n\n--- ${payload} ping statistics ---\n4 packets transmitted, 4 packets received, 0.0% packet loss\nround-trip min/avg/max/stddev = 0.037/0.040/0.042/0.002 ms\n`;
+                        
+                        // Add output line by line with delay for effect
+                        const lines = output.split('\n');
+                        let i = 0;
+                        
+                        function addLine() {
+                            if (i < lines.length) {
+                                commandOutput.innerHTML += lines[i] + '\n';
+                                commandOutput.scrollTop = commandOutput.scrollHeight;
+                                i++;
+                                setTimeout(addLine, 100);
+                            }
+                        }
+                        
+                        addLine();
+                    }
+                } else {
+                    // Handle non-JSON response
+                    payloadDisplay.textContent = "Server returned an invalid response format. The server might be experiencing issues.";
+                    payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+                    console.error('Non-JSON response:', result.data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                payloadDisplay.textContent = "Error analyzing payload: " + error.message;
+                payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+            });
+    });
+</script>
+
+<style>
+    .payload-display {
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .alert-info {
+        background-color: rgba(76, 175, 80, 0.1);
+        border-color: #4caf50;
+        color: #e0e0e0;
+    }
+    
+    .alert-success {
+        background-color: rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+    
+    .alert-danger {
+        background-color: rgba(244, 67, 54, 0.2);
+        border-color: #f44336;
+        color: #f44336;
+    }
+    
+    .alert-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+    
+    .form-check-input:checked {
+        background-color: #4caf50;
+        border-color: #4caf50;
+    }
+    
+    #commandOutput {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+    
+    .card-header {
+        border-radius: 8px !important;
+    }
+    
+    code {
+        background-color: #2a2a2a;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+    
+    .input-group-text {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

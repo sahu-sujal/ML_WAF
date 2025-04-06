@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold fs-1">XSS Protection</h2>
+    <p class="text-center fs-5 mb-4">Test your payloads to see if the AI model can detect and block XSS attacks.</p>
+    
+    <div class="card p-4 shadow-lg border-0 mb-4">
+        <div class="card-header bg-dark text-primary fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-info-circle me-2"></i> About Cross-Site Scripting
+        </div>
+        <div class="card-body">
+            <p class="fs-5">Cross-Site Scripting (XSS) occurs when untrusted user input containing JavaScript is executed in a victim's browser, allowing attackers to:</p>
+            <ul class="fs-5">
+                <li>Steal session cookies and sensitive information</li>
+                <li>Redirect users to malicious websites</li>
+                <li>Perform unauthorized actions on behalf of the user</li>
+                <li>Modify the content of the website</li>
+            </ul>
+            <p class="fs-5">Common attack vectors include:</p>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">&lt;img src="x" onerror="alert('XSS')"&gt;</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">&lt;body onload=alert('test1')&gt;</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 shadow-lg border-0">
+        <form id="payloadForm">
+            <div class="mb-4">
+                <label for="payload" class="form-label fw-bold fs-4 mb-2 text-primary">Enter XSS Payload</label>
+                <textarea class="form-control border-primary shadow-sm" id="payload" name="payload" rows="5" placeholder="Enter your XSS payload here..." style="font-size: 1.1rem;"></textarea>
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input border-primary" type="checkbox" id="aiToggle" checked style="width: 1.5rem; height: 1.5rem;">
+                <label class="form-check-label fw-bold fs-5 ms-2 text-primary" for="aiToggle">Enable AI Protection</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-3 fs-4 fw-bold shadow">
+                <i class="fas fa-paper-plane me-2"></i> Submit Payload
+            </button>
+        </form>
+    </div>
+    
+    <div id="payloadDisplay" class="payload-display d-none mt-4 fs-4 p-4 shadow-lg"></div>
+    
+    <div id="xssResultContainer" class="mt-4 d-none">
+        <div class="card p-4 shadow-lg border-0">
+            <div class="card-header bg-warning text-dark fw-bold fs-4 mb-3">
+                <i class="fas fa-exclamation-triangle me-2"></i> JavaScript Execution (Simulated)
+            </div>
+            <div class="card-body">
+                <div id="xssContainer" class="bg-dark text-light p-3 rounded" style="min-height: 200px; font-family: 'Courier New', monospace; overflow-x: auto;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card p-4 shadow-lg border-0 mt-4">
+        <div class="card-header bg-dark text-warning fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-shield-alt me-2"></i> XSS Prevention
+        </div>
+        <div class="card-body">
+            <p class="fs-5">To protect against XSS attacks, consider the following measures:</p>
+            <ul class="fs-5">
+                <li>Encode output to HTML contexts using proper escaping</li>
+                <li>Implement Content Security Policy (CSP) headers</li>
+                <li>Use frameworks that automatically escape content</li>
+                <li>Validate all user input on the server-side</li>
+                <li>Set HttpOnly flag on sensitive cookies</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('payloadForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const payload = document.getElementById('payload').value;
+        const aiToggle = document.getElementById('aiToggle').checked;
+
+        // Show loading indicator
+        const payloadDisplay = document.getElementById('payloadDisplay');
+        payloadDisplay.classList.remove('d-none');
+        payloadDisplay.textContent = "Analyzing XSS payload...";
+        payloadDisplay.className = 'payload-display alert alert-info mt-4 fs-4 p-4 shadow-lg';
+        
+        // Clear previous XSS results
+        document.getElementById('xssContainer').innerHTML = '';
+        document.getElementById('xssResultContainer').classList.add('d-none');
+
+        if (!aiToggle) {
+            // Display warning
+            payloadDisplay.textContent = "⚠️ AI protection is disabled! Simulating JavaScript execution without protection. ⚠️";
+            payloadDisplay.className = 'payload-display alert alert-warning mt-4 fs-4 p-4 shadow-lg';
+            
+            // Show XSS result container
+            document.getElementById('xssResultContainer').classList.remove('d-none');
+            
+            try {
+                // Make xssContainer visible
+                const xssContainer = document.getElementById('xssContainer');
+                xssContainer.innerHTML = `<div class="mb-2 text-warning"># Executing payload:</div>`;
+                
+                // Method 1: If payload contains HTML tags, use innerHTML
+                if (payload.includes('<') && payload.includes('>')) {
+                    xssContainer.innerHTML += `<div class="text-info">Rendering HTML content...</div>`;
+                    
+                    const xssDiv = document.createElement('div');
+                    xssDiv.innerHTML = payload;
+                    xssContainer.appendChild(xssDiv);
+                    
+                    // If it has script tags, also execute scripts (since innerHTML doesn't execute them)
+                    if (payload.includes('<script')) {
+                        xssContainer.innerHTML += `<div class="text-danger">Script tags detected! In a real environment, this could execute malicious code.</div>`;
+                        const scriptContent = payload.match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
+                        if (scriptContent) {
+                            scriptContent.forEach(script => {
+                                const scriptText = script.replace(/<script[^>]*>|<\/script>/gi, '');
+                                xssContainer.innerHTML += `<div class="text-danger">Extracted script content: ${scriptText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`;
+                            });
+                        }
+                    }
+                } 
+                // Method 2: Execute as raw JavaScript if it doesn't look like HTML
+                else {
+                    try {
+                        // Create a message to show what's being executed
+                        xssContainer.innerHTML += `<div class="text-danger">Attempting to execute JavaScript: ${payload.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`;
+                        xssContainer.innerHTML += `<div class="text-warning">In a vulnerable application, this could lead to:</div>`;
+                        xssContainer.innerHTML += `<ul class="text-warning">
+                            <li>Cookie theft</li>
+                            <li>Session hijacking</li>
+                            <li>Keylogging</li>
+                            <li>Phishing attacks</li>
+                        </ul>`;
+                    } catch (error) {
+                        xssContainer.innerHTML += `<div class="text-danger">JavaScript Error: ${error.message}</div>`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error executing payload:', error);
+                const xssContainer = document.getElementById('xssContainer');
+                xssContainer.innerHTML = `<div class="text-danger">Error executing payload: ${error.message}</div>`;
+            }
+            return;
+        }
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload }),
+        })
+            .then(response => {
+                // Check if the response is JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => ({ data, isJson: true }));
+                } else {
+                    return response.text().then(text => ({ data: text, isJson: false }));
+                }
+            })
+            .then(result => {
+                payloadDisplay.classList.remove('d-none');
+                
+                if (result.isJson) {
+                    // Handle JSON response
+                    const data = result.data;
+                    payloadDisplay.textContent = data.message;
+                    payloadDisplay.className = data.status === 'malicious' 
+                        ? 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg' 
+                        : 'payload-display alert alert-success mt-4 fs-4 p-4 shadow-lg';
+                    
+                    // If safe, render a sanitized version
+                    if (data.status === 'safe') {
+                        document.getElementById('xssResultContainer').classList.remove('d-none');
+                        const xssContainer = document.getElementById('xssContainer');
+                        xssContainer.innerHTML = `<div class="text-success">Safe content detected. The payload has been sanitized.</div>`;
+                        xssContainer.innerHTML += `<div class="mt-3 p-3 bg-dark text-light rounded">
+                            <code>${payload.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>
+                        </div>`;
+                    }
+                } else {
+                    // Handle non-JSON response (like HTML error pages)
+                    payloadDisplay.textContent = "Server returned an invalid response format. The server might be experiencing issues.";
+                    payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+                    console.error('Non-JSON response:', result.data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                payloadDisplay.textContent = "Error analyzing payload: " + error.message;
+                payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+            });
+    });
+</script>
+
+<style>
+    .payload-display {
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .alert-info {
+        background-color: rgba(76, 175, 80, 0.1);
+        border-color: #4caf50;
+        color: #e0e0e0;
+    }
+    
+    .alert-success {
+        background-color: rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+    
+    .alert-danger {
+        background-color: rgba(244, 67, 54, 0.2);
+        border-color: #f44336;
+        color: #f44336;
+    }
+    
+    .alert-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+    
+    .form-check-input:checked {
+        background-color: #4caf50;
+        border-color: #4caf50;
+    }
+    
+    .card-header {
+        border-radius: 8px !important;
+    }
+    
+    #xssContainer {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+    
+    code {
+        font-family: 'Courier New', monospace;
+        word-wrap: break-word;
+    }
+</style>
+{% endblock %}

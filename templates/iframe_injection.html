@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold fs-1">Iframe Injection Protection</h2>
+    <p class="text-center fs-5 mb-4">Test your iframe injection payloads to see if the AI model can detect and block them.</p>
+    
+    <div class="card p-4 shadow-lg border-0 mb-4">
+        <div class="card-header bg-dark text-primary fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-info-circle me-2"></i> About Iframe Injection
+        </div>
+        <div class="card-body">
+            <p class="fs-5">Iframe injection occurs when attackers embed malicious iframes into web pages, allowing them to:</p>
+            <ul class="fs-5">
+                <li>Load content from untrusted sources</li>
+                <li>Execute cross-site request forgery (CSRF) attacks</li>
+                <li>Steal sensitive information through clickjacking</li>
+                <li>Distribute malware or phishing content</li>
+            </ul>
+            <p class="fs-5">Common attack vectors include:</p>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">&lt;iframe src="https://malicious-site.com" style="display:none"&gt;&lt;/iframe&gt;</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">&lt;iframe src="javascript:alert('XSS')" width="500" height="300"&gt;&lt;/iframe&gt;</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 shadow-lg border-0">
+        <form id="iframeInjectionForm">
+            <div class="mb-4">
+                <label for="payload" class="form-label fw-bold fs-4 mb-2 text-primary">Enter Iframe Injection Payload</label>
+                <textarea class="form-control border-primary shadow-sm" id="payload" name="payload" rows="5" placeholder="Enter your iframe code here..." style="font-size: 1.1rem;"></textarea>
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input border-primary" type="checkbox" id="aiToggle" checked style="width: 1.5rem; height: 1.5rem;">
+                <label class="form-check-label fw-bold fs-5 ms-2 text-primary" for="aiToggle">Enable AI Protection</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-3 fs-4 fw-bold shadow">
+                <i class="fas fa-paper-plane me-2"></i> Submit Iframe
+            </button>
+        </form>
+    </div>
+    
+    <div id="payloadDisplay" class="payload-display d-none mt-4 fs-4 p-4 shadow-lg"></div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4 shadow-lg border-0 h-100">
+                <div class="card-header bg-dark text-light fw-bold fs-5 mb-3">
+                    <i class="fas fa-code me-2"></i> Iframe Code
+                </div>
+                <div class="card-body">
+                    <pre id="iframeCode" class="bg-dark text-light p-3 rounded" style="min-height: 150px; overflow-x: auto;"></pre>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4 shadow-lg border-0 h-100">
+                <div class="card-header bg-dark text-light fw-bold fs-5 mb-3">
+                    <i class="fas fa-eye me-2"></i> Iframe Rendering (When AI Protection Disabled)
+                </div>
+                <div class="card-body">
+                    <div id="iframeRenderContainer" class="bg-dark p-3 rounded" style="min-height: 150px; overflow: auto;">
+                        <div id="iframeRender"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card p-4 shadow-lg border-0 mt-4">
+        <div class="card-header bg-dark text-warning fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-exclamation-triangle me-2"></i> Iframe Security Recommendations
+        </div>
+        <div class="card-body">
+            <p class="fs-5">To protect against iframe-based attacks, consider the following measures:</p>
+            <ul class="fs-5">
+                <li>Use the <code>sandbox</code> attribute to restrict iframe capabilities</li>
+                <li>Implement Content Security Policy (CSP) to control allowed iframe sources</li>
+                <li>Set <code>X-Frame-Options</code> header to prevent your site from being framed</li>
+                <li>Always validate and sanitize user input before rendering</li>
+                <li>Only allow iframes from trusted sources</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('iframeInjectionForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const payload = document.getElementById('payload').value;
+        const aiToggle = document.getElementById('aiToggle').checked;
+        
+        // Show loading indicator
+        const payloadDisplay = document.getElementById('payloadDisplay');
+        payloadDisplay.classList.remove('d-none');
+        payloadDisplay.textContent = "Analyzing iframe payload...";
+        payloadDisplay.className = 'payload-display alert alert-info mt-4 fs-4 p-4 shadow-lg';
+        
+        // Display the iframe code
+        const iframeCode = document.getElementById('iframeCode');
+        iframeCode.textContent = payload;
+        
+        // Clear previous iframe render
+        const iframeRender = document.getElementById('iframeRender');
+        iframeRender.innerHTML = '';
+        
+        if (!aiToggle) {
+            // Display warning
+            payloadDisplay.textContent = "⚠️ AI protection is disabled! Rendering iframe without protection. ⚠️";
+            payloadDisplay.className = 'payload-display alert alert-warning mt-4 fs-4 p-4 shadow-lg';
+            
+            // Render the iframe with some basic protections
+            try {
+                // Check if it's a complete iframe tag
+                if (payload.trim().toLowerCase().startsWith('<iframe') && payload.trim().toLowerCase().includes('</iframe>')) {
+                    iframeRender.innerHTML = payload;
+                } 
+                // If it's just a URL, create an iframe for it
+                else if (payload.trim().toLowerCase().startsWith('http')) {
+                    iframeRender.innerHTML = `<iframe src="${payload}" width="100%" height="200" sandbox="allow-scripts"></iframe>`;
+                }
+                // Otherwise, try to render as-is
+                else {
+                    iframeRender.innerHTML = payload;
+                }
+            } catch (error) {
+                iframeRender.innerHTML = `<p class="text-danger">Error rendering iframe: ${error.message}</p>`;
+            }
+            
+            return;
+        }
+        
+        // AI Protection is enabled
+        fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload }),
+        })
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => ({ data, isJson: true }));
+                } else {
+                    return response.text().then(text => ({ data: text, isJson: false }));
+                }
+            })
+            .then(result => {
+                payloadDisplay.classList.remove('d-none');
+                
+                if (result.isJson) {
+                    // Handle JSON response
+                    const data = result.data;
+                    payloadDisplay.textContent = data.message;
+                    payloadDisplay.className = data.status === 'malicious' 
+                        ? 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg' 
+                        : 'payload-display alert alert-success mt-4 fs-4 p-4 shadow-lg';
+                    
+                    // If safe, render the iframe (with sandbox protection)
+                    if (data.status === 'safe') {
+                        if (payload.trim().toLowerCase().startsWith('<iframe')) {
+                            // Extract the src attribute and add sandbox if it doesn't exist
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = payload;
+                            const iframe = tempDiv.querySelector('iframe');
+                            
+                            if (iframe && !iframe.hasAttribute('sandbox')) {
+                                iframe.setAttribute('sandbox', 'allow-scripts');
+                            }
+                            
+                            iframeRender.innerHTML = tempDiv.innerHTML;
+                        } else if (payload.trim().toLowerCase().startsWith('http')) {
+                            iframeRender.innerHTML = `<iframe src="${payload}" width="100%" height="200" sandbox="allow-scripts"></iframe>`;
+                        } else {
+                            iframeRender.innerHTML = payload;
+                        }
+                    } else {
+                        iframeRender.innerHTML = '<p class="text-danger">Iframe blocked due to security concerns</p>';
+                    }
+                } else {
+                    // Handle non-JSON response
+                    payloadDisplay.textContent = "Server returned an invalid response format. The server might be experiencing issues.";
+                    payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+                    console.error('Non-JSON response:', result.data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                payloadDisplay.textContent = "Error analyzing payload: " + error.message;
+                payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+            });
+    });
+</script>
+
+<style>
+    .payload-display {
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .alert-info {
+        background-color: rgba(76, 175, 80, 0.1);
+        border-color: #4caf50;
+        color: #e0e0e0;
+    }
+    
+    .alert-success {
+        background-color: rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+    
+    .alert-danger {
+        background-color: rgba(244, 67, 54, 0.2);
+        border-color: #f44336;
+        color: #f44336;
+    }
+    
+    .alert-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+    
+    .form-check-input:checked {
+        background-color: #4caf50;
+        border-color: #4caf50;
+    }
+    
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    
+    .card-header {
+        border-radius: 8px !important;
+    }
+    
+    code {
+        background-color: #2a2a2a;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+</style>
+{% endblock %}
