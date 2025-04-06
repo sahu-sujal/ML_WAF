@@ -87,9 +87,36 @@
 </div>
 
 <script>
+    function isValidUrl(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
+    function formatUrl(url) {
+        url = url.trim();
+        // Remove any leading/trailing spaces and HTML tags
+        url = url.replace(/<\/?iframe[^>]*>/g, '');
+        
+        // Check if it's already a full URL
+        if (url.match(/^https?:\/\//i)) {
+            return url;
+        }
+        
+        // Add http:// if just a domain is provided
+        return 'http://' + url;
+    }
+
+    function createIframe(url) {
+        return `<iframe src="${url}" width="100%" height="300" sandbox="allow-scripts allow-same-origin"></iframe>`;
+    }
+
     document.getElementById('iframeInjectionForm').addEventListener('submit', function (e) {
         e.preventDefault();
-        const payload = document.getElementById('payload').value;
+        let payload = document.getElementById('payload').value.trim();
         const aiToggle = document.getElementById('aiToggle').checked;
         
         // Show loading indicator
@@ -107,28 +134,22 @@
         iframeRender.innerHTML = '';
         
         if (!aiToggle) {
-            // Display warning
-            payloadDisplay.textContent = "⚠️ AI protection is disabled! Rendering iframe without protection. ⚠️";
-            payloadDisplay.className = 'payload-display alert alert-warning mt-4 fs-4 p-4 shadow-lg';
-            
-            // Render the iframe with some basic protections
             try {
-                // Check if it's a complete iframe tag
-                if (payload.trim().toLowerCase().startsWith('<iframe') && payload.trim().toLowerCase().includes('</iframe>')) {
+                let finalUrl;
+                if (payload.includes('<iframe')) {
+                    // Keep the original iframe tag if provided
                     iframeRender.innerHTML = payload;
-                } 
-                // If it's just a URL, create an iframe for it
-                else if (payload.trim().toLowerCase().startsWith('http')) {
-                    iframeRender.innerHTML = `<iframe src="${payload}" width="100%" height="200" sandbox="allow-scripts"></iframe>`;
+                } else {
+                    // Create new iframe for URL
+                    finalUrl = formatUrl(payload);
+                    iframeRender.innerHTML = createIframe(finalUrl);
                 }
-                // Otherwise, try to render as-is
-                else {
-                    iframeRender.innerHTML = payload;
-                }
+                
+                payloadDisplay.textContent = "⚠️ AI protection is disabled! Rendering iframe without protection. ⚠️";
+                payloadDisplay.className = 'payload-display alert alert-warning mt-4 fs-4 p-4 shadow-lg';
             } catch (error) {
-                iframeRender.innerHTML = `<p class="text-danger">Error rendering iframe: ${error.message}</p>`;
+                iframeRender.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
             }
-            
             return;
         }
         

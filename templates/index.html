@@ -1,9 +1,277 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="text-center mb-5 mt-4">
-    <h1 class="display-4 fw-bold" style="color: #4caf50;">ML-Based Web Application Firewall</h1>
-    <p class="lead fs-4">Analyze your payloads for potential security threats.</p>
+<div class="text-center mb-5 mt-4 animate__animated animate__fadeIn">
+    <h1 class="display-3 fw-bold" style="color: #4caf50; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+        ML-Based Web Application Firewall
+    </h1>
+    <p class="lead fs-3" style="color: #90caf9;">Advanced Protection Against Web Attacks Using Machine Learning</p>
 </div>
+
+<!-- Hero Section with Particle.js Background -->
+<div id="particles-js" class="position-relative">
+    <div class="card glass-card p-5 mb-5 text-center animate__animated animate__fadeInUp">
+        <h2 class="display-4 mb-4 text-gradient">Protecting Your Web Applications</h2>
+        <p class="lead fs-4">Using advanced machine learning algorithms to detect and prevent various types of web attacks</p>
+        <div class="mt-4">
+            <a href="#services" class="btn btn-glow btn-lg me-3">Explore Services</a>
+            <a href="#contact" class="btn btn-outline-glow btn-lg">Contact Us</a>
+        </div>
+    </div>
+</div>
+
+<!-- Services Section -->
+<section id="services" class="mb-5">
+    <h2 class="text-center mb-4">Our Services</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                    <h3>AI Protection</h3>
+                    <p>Advanced machine learning algorithms to detect malicious payloads</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-code fa-3x mb-3 text-primary"></i>
+                    <h3>Real-time Analysis</h3>
+                    <p>Instant analysis of potential security threats</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-lock fa-3x mb-3 text-primary"></i>
+                    <h3>Multiple Protections</h3>
+                    <p>Coverage for various types of web attacks</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="mb-5">
+    <div class="card glass-card">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-4 text-gradient display-4">About Our Platform</h2>
+            <div class="row align-items-center mb-5">
+                <div class="col-md-6">
+                    <div class="pe-md-4">
+                        <h3 class="mb-4 text-primary">Next-Gen Web Security</h3>
+                        <p class="fs-5 mb-4">Our ML-based Web Application Firewall leverages state-of-the-art machine learning algorithms to provide real-time protection against various web attacks. Built on extensive research and continuous learning, our system adapts to new threat patterns automatically.</p>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
+                            <div>
+                                <h4 class="mb-1">Proactive Defense</h4>
+                                <p class="mb-0">24/7 monitoring with real-time threat detection</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-brain fa-2x text-primary me-3"></i>
+                            <div>
+                                <h4 class="mb-1">Self-Learning System</h4>
+                                <p class="mb-0">Continuously improving detection accuracy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative mt-4 mt-md-0">
+                        <div class="card bg-dark border-primary p-4">
+                            <h4 class="text-primary mb-4">Model Training Statistics</h4>
+                            <div class="training-stats">
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fs-5">SQL Injection</span>
+                                        <span class="badge bg-primary">80,000+ Samples</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fs-5">Cross-Site Scripting (XSS)</span>
+                                        <span class="badge bg-primary">100,000+ Samples</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 98%;" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fs-5">Command Injection</span>
+                                        <span class="badge bg-primary">30,000+ Samples</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="d-flex align-items-center justify-content-between text-primary">
+                                    <div class="text-center">
+                                        <h3 class="mb-2">99.9%</h3>
+                                        <p class="mb-0">Accuracy</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <h3 class="mb-2">0.1ms</h3>
+                                        <p class="mb-0">Response Time</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <h3 class="mb-2">24/7</h3>
+                                        <p class="mb-0">Protection</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section id="team" class="mb-5">
+    <h2 class="text-center mb-4">Our Team</h2>
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-4 col-md-6">
+            <div class="card team-card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="team-avatar mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Sujal+Sahu&background=4caf50&color=fff" class="rounded-circle" alt="Sujal Sahu">
+                    </div>
+                    <h3 class="fs-4 mb-2">Sujal Sahu</h3>
+                    <p class="text-primary mb-3">Team Lead & ML Engineer</p>
+                    <p class="mb-4">Specializing in AI/ML and Web Security, with expertise in building robust security systems.</p>
+                    <div class="social-links">
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-github"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card team-card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="team-avatar mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Arya+Bagat&background=4caf50&color=fff" class="rounded-circle" alt="Arya Bagat">
+                    </div>
+                    <h3 class="fs-4 mb-2">Arya Bagat</h3>
+                    <p class="text-primary mb-3">Full Stack Developer</p>
+                    <p class="mb-4">Expert in web development and security implementation, focusing on secure coding practices.</p>
+                    <div class="social-links">
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-github"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card team-card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="team-avatar mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Tanisha+Sahu&background=4caf50&color=fff" class="rounded-circle" alt="Tanisha Sahu">
+                    </div>
+                    <h3 class="fs-4 mb-2">Tanisha Sahu</h3>
+                    <p class="text-primary mb-3">Security Analyst</p>
+                    <p class="mb-4">Specializes in penetration testing and vulnerability assessment for web applications.</p>
+                    <div class="social-links">
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-github"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card team-card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="team-avatar mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Samiksha+Tiwari&background=4caf50&color=fff" class="rounded-circle" alt="Samiksha Tiwari">
+                    </div>
+                    <h3 class="fs-4 mb-2">Samiksha Tiwari</h3>
+                    <p class="text-primary mb-3">Backend Developer</p>
+                    <p class="mb-4">Focuses on system architecture and implementing secure backend solutions.</p>
+                    <div class="social-links">
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-github"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card team-card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="team-avatar mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Smita+Vaidya&background=4caf50&color=fff" class="rounded-circle" alt="Smita Vaidya">
+                    </div>
+                    <h3 class="fs-4 mb-2">Smita Vaidya</h3>
+                    <p class="text-primary mb-3">UI/UX Designer</p>
+                    <p class="mb-4">Creates intuitive and secure user interfaces with a focus on user experience.</p>
+                    <div class="social-links">
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-github"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="mb-5 animate__animated animate__fadeIn">
+    <div class="card glass-card">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-4 text-gradient display-5">Get In Touch</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form class="contact-form">
+                        <div class="form-group mb-4">
+                            <div class="input-group glow-group">
+                                <span class="input-group-text bg-transparent text-primary border-end-0">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control neon-input ps-2" id="name" placeholder="Your Name" style="color: #fff;">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <div class="input-group glow-group">
+                                <span class="input-group-text bg-transparent text-primary border-end-0">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control neon-input ps-2" id="email" placeholder="Your Email" style="color: #fff;">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <div class="input-group glow-group">
+                                <span class="input-group-text bg-transparent text-primary border-end-0">
+                                    <i class="fas fa-comment"></i>
+                                </span>
+                                <textarea class="form-control neon-input ps-2" id="message" name="message" rows="5" placeholder="Your Message..." 
+                                    style="color: #fff; font-size: 1.1rem;"></textarea>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-glow btn-lg px-5 py-3">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <div class="row mb-5">
     <div class="col-md-4 text-center mb-4">
@@ -39,7 +307,7 @@
 </div>
 
 <div class="row mb-5">
-    <div class="col-md-6 text-center mb-4">
+    <div class="col-md-4 text-center mb-4">
         <div class="card h-100 p-4 shadow border-0 hover-card">
             <i class="fas fa-window-maximize fa-3x mb-3 text-primary"></i>
             <h4 class="fw-bold">Iframe Injection Protection</h4>
@@ -49,7 +317,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 text-center mb-4">
+    <div class="col-md-4 text-center mb-4">
         <div class="card h-100 p-4 shadow border-0 hover-card">
             <i class="fas fa-terminal fa-3x mb-3 text-primary"></i>
             <h4 class="fw-bold">Command Injection Protection</h4>
@@ -59,62 +327,52 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 p-4 shadow border-0 hover-card">
+            <i class="fas fa-folder-open fa-3x mb-3 text-primary"></i>
+            <h4 class="fw-bold">Path Traversal Protection</h4>
+            <p class="fs-5">Block attempts to access files outside the web root.</p>
+            <div class="mt-auto pt-3">
+                <a href="{{ url_for('path_traversal') }}" class="btn btn-primary fw-bold py-2 px-4">Test Path Traversal <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="card p-4 mb-5 shadow border-0">
+<div id="analysis" class="card p-4 mb-5 shadow border-0" style="scroll-margin-top: 100px;">
     <div class="card-header d-flex justify-content-between align-items-center rounded p-3" style="background-color: #1a1a1a; border-bottom: 2px solid #4caf50;">
         <h5 class="mb-0 fw-bold fs-4 text-primary">Quick Payload Analysis</h5>
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="aiToggle" checked style="width: 3rem; height: 1.5rem;">
-            <label class="form-check-label ms-2 fs-5" for="aiToggle">AI Analysis</label>
-        </div>
     </div>
     <div class="card-body p-4">
         <form id="payloadForm">
             <div class="mb-4">
                 <label for="payload" class="form-label fw-bold fs-5 mb-2">Enter Payload</label>
-                <textarea class="form-control border-2 shadow-sm" id="payload" name="payload" rows="5" placeholder="Enter your payload here..." style="font-size: 1.1rem; border-color: #4caf50;"></textarea>
+                <textarea 
+                    class="form-control border-2 shadow-sm neon-input" 
+                    id="payload" 
+                    name="payload" 
+                    rows="5" 
+                    placeholder="Enter your payload here..." 
+                    style="font-size: 1.1rem; border-color: #4caf50; color: #fff;"
+                ></textarea>
             </div>
-            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold fs-5 shadow"><i class="fas fa-search me-2"></i>Analyze Payload</button>
+            <button type="submit" class="btn btn-glow w-100 py-3 fw-bold fs-5 shadow">
+                <i class="fas fa-search me-2"></i>Analyze Payload
+            </button>
         </form>
     </div>
 </div>
 
-<div id="payloadDisplay" class="payload-display d-none alert fs-4 text-center fw-bold shadow-lg p-4" style="background-color: #1a1a1a; border: 1px solid #4caf50; color: #e0e0e0;"></div>
-
-<!-- Popup Modal -->
-<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background-color: #212121; border: 1px solid #4caf50;">
-            <div class="modal-header" style="border-bottom: 1px solid #4caf50;">
-                <h5 class="modal-title fs-4 fw-bold text-primary" id="resultModalLabel">Analysis Result</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body fs-5 p-4">
-                <!-- Result message will be inserted here -->
-            </div>
-            <div class="modal-footer" style="border-top: 1px solid #4caf50;">
-                <button type="button" class="btn btn-primary fw-bold py-2 px-4" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="payloadDisplay" class="payload-display d-none alert fs-4 text-center fw-bold shadow-lg p-4 animate__animated" style="background-color: #1a1a1a; border: 1px solid #4caf50; color: #e0e0e0;"></div>
 
 <script>
     document.getElementById('payloadForm').addEventListener('submit', function (e) {
         e.preventDefault();
         const payload = document.getElementById('payload').value;
-        const aiToggle = document.getElementById('aiToggle').checked;
         
-        // Create and show loading spinner
         const payloadDisplay = document.getElementById('payloadDisplay');
         payloadDisplay.classList.remove('d-none');
         payloadDisplay.innerHTML = '<div class="spinner-border text-primary me-2" role="status"></div> Analyzing payload...';
-        
-        if (!aiToggle) {
-            payloadDisplay.innerHTML = '<span class="text-warning">AI analysis is disabled. Enable it for protection.</span>';
-            return;
-        }
 
         fetch('/predict', {
             method: 'POST',
@@ -123,15 +381,15 @@
         })
             .then(response => response.json())
             .then(data => {
-                payloadDisplay.classList.remove('d-none', 'alert-info', 'alert-danger', 'alert-success');
-                payloadDisplay.classList.add(data.status === 'malicious' ? 'alert-danger' : 'alert-success');
-                payloadDisplay.innerHTML = data.message;
-                
-                // Also show in modal
-                const modalBody = document.querySelector('.modal-body');
-                modalBody.innerHTML = data.message;
-                const myModal = new bootstrap.Modal(document.getElementById('resultModal'));
-                myModal.show();
+                payloadDisplay.classList.remove('d-none', 'alert-info', 'alert-danger', 'alert-success', 'animate__fadeIn');
+                payloadDisplay.classList.add('animate__fadeIn');
+                if (data.status === 'malicious') {
+                    payloadDisplay.classList.add('alert-danger');
+                    payloadDisplay.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + data.message;
+                } else {
+                    payloadDisplay.classList.add('alert-success');
+                    payloadDisplay.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + data.message;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -140,52 +398,304 @@
                 payloadDisplay.innerHTML = 'Error analyzing payload. Please try again.';
             });
     });
+
+    // Initialize Particle.js
+    particlesJS('particles-js',
+        {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#4caf50"
+                },
+                "shape": {
+                    "type": "circle"
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false
+                },
+                "size": {
+                    "value": 3,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#4caf50",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+
+    // Add scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__fadeInUp');
+                    entry.target.style.opacity = 1;
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.style.opacity = 0;
+            observer.observe(card);
+        });
+    });
 </script>
 
 <style>
+    /* Add these new styles */
+    .text-gradient {
+        background: linear-gradient(45deg, #4caf50, #90caf9);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .glass-card {
+        background: rgba(33, 33, 33, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        box-shadow: 0 8px 32px rgba(76, 175, 80, 0.2);
+    }
+
+    .btn-glow {
+        background: #4caf50;
+        color: white;
+        border: none;
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        transition: all 0.3s ease;
+    }
+
+    .btn-glow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+        background: #45a049;
+        color: white;
+    }
+
+    .btn-outline-glow {
+        border: 2px solid #4caf50;
+        color: #4caf50;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-glow:hover {
+        background: #4caf50;
+        color: white;
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+        transform: translateY(-3px);
+    }
+
+    /* Enhanced hover effects */
     .hover-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid #333333 !important;
+        transform: perspective(1000px) rotateY(0deg);
+        transition: all 0.5s ease;
     }
+
     .hover-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6) !important;
+        transform: perspective(1000px) rotateY(5deg) translateY(-8px);
+        box-shadow: -10px 10px 30px rgba(76, 175, 80, 0.3) !important;
+    }
+
+    /* Team card enhancements */
+    .team-card {
+        background: rgba(33, 33, 33, 0.9);
+        backdrop-filter: blur(5px);
+        border: none !important;
+    }
+
+    .team-avatar img {
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Particle.js container */
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    /* Contact Form Styles */
+    .contact-form .form-control {
+        background: rgba(33, 33, 33, 0.7);
+        border: 2px solid rgba(76, 175, 80, 0.3);
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .neon-input {
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.1);
+    }
+
+    .neon-input:focus {
+        background: rgba(33, 33, 33, 0.9) !important;
         border-color: #4caf50 !important;
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3) !important;
+        color: #fff !important;
     }
-    .payload-display {
-        padding: 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 1.2rem;
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: #4caf50;
+        transform: scale(0.85) translateY(-1rem);
     }
-    .alert-info {
-        background-color: rgba(76, 175, 80, 0.1);
+
+    .form-floating > label {
+        color: rgba(255, 255, 255, 0.7);
+        padding-left: 1rem;
+    }
+
+    .form-floating > .form-control:focus::placeholder {
+        color: transparent;
+    }
+
+    .contact-form .btn-glow {
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .contact-form .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-floating > .form-control:focus,
+    .form-floating > .form-control:not(:placeholder-shown) {
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+    }
+
+    /* Updated Contact Form Styles */
+    .contact-form .input-group-text {
+        border: 2px solid rgba(76, 175, 80, 0.3);
+        border-right: none;
+    }
+
+    .contact-form .form-control {
+        background: rgba(33, 33, 33, 0.7);
+        border: 2px solid rgba(76, 175, 80, 0.3);
+        border-left: none;
+        color: #fff;
+        height: auto;
+        padding: 0.8rem 1rem;
+    }
+
+    .contact-form .form-control:focus {
+        background: rgba(33, 33, 33, 0.9);
         border-color: #4caf50;
-        color: #e0e0e0;
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        color: #fff;
     }
-    .alert-success {
-        background-color: rgba(76, 175, 80, 0.2);
+
+    .contact-form .input-group:focus-within .input-group-text {
         border-color: #4caf50;
         color: #4caf50;
     }
-    .alert-danger {
-        background-color: rgba(244, 67, 54, 0.2);
-        border-color: #f44336;
-        color: #f44336;
+
+    .contact-form .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
     }
-    .alert-warning {
-        background-color: rgba(255, 193, 7, 0.2);
-        border-color: #ffc107;
-        color: #ffc107;
+
+    .contact-form textarea.form-control {
+        min-height: 120px;
     }
-    .form-check-input:checked {
-        background-color: #4caf50;
+
+    #payload::placeholder {
+        color: rgba(255, 255, 255, 0.6) !important;
+        opacity: 1;
+    }
+
+    #payload:focus::placeholder {
+        opacity: 0.4;
+        transition: opacity 0.2s ease;
+    }
+
+    .glow-group {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .glow-group:focus-within {
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    }
+
+    .glow-group .input-group-text,
+    .glow-group .form-control {
+        border-color: rgba(76, 175, 80, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .glow-group:focus-within .input-group-text,
+    .glow-group:focus-within .form-control {
         border-color: #4caf50;
     }
-    .spinner-border {
+
+    .glow-group .form-control {
+        background: rgba(33, 33, 33, 0.7) !important;
+    }
+
+    .glow-group:focus-within .form-control {
+        background: rgba(33, 33, 33, 0.9) !important;
+    }
+
+    /* Attack Detection Styles */
+    .payload-display.alert-danger {
+        background-color: rgba(220, 53, 69, 0.2) !important;
+        border-color: #dc3545 !important;
+        color: #ff4d4d !important;
+        box-shadow: 0 0 25px rgba(220, 53, 69, 0.3) !important;
+    }
+
+    .payload-display.alert-success {
+        background-color: rgba(76, 175, 80, 0.2) !important;
+        border-color: #4caf50 !important;
         color: #4caf50 !important;
+        box-shadow: 0 0 25px rgba(76, 175, 80, 0.3) !important;
     }
 </style>
+
+<!-- Add Particle.js and Animation libraries -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 {% endblock %}

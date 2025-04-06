@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold fs-1">Path Traversal Protection</h2>
+    <p class="text-center fs-5 mb-4">Test your path traversal payloads to see if the AI model can detect and block them.</p>
+    
+    <div class="card p-4 shadow-lg border-0 mb-4">
+        <div class="card-header bg-dark text-primary fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-info-circle me-2"></i> About Path Traversal
+        </div>
+        <div class="card-body">
+            <p class="fs-5">Path traversal (also known as directory traversal) occurs when attackers can access files and directories outside of the web root folder, allowing them to:</p>
+            <ul class="fs-5">
+                <li>Access sensitive configuration files</li>
+                <li>Read system files containing credentials</li>
+                <li>Access logs and other sensitive data</li>
+                <li>Execute arbitrary files on the server</li>
+            </ul>
+            <p class="fs-5">Common attack vectors include:</p>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">../../../etc/passwd</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">..%2f..%2f..%2fetc%2fpasswd</code>
+            </div>
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-warning">....\\....\\boot.ini</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 shadow-lg border-0">
+        <form id="pathTraversalForm">
+            <div class="mb-4">
+                <label for="payload" class="form-label fw-bold fs-4 mb-2 text-primary">Enter File Path</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark text-light border-0" id="basic-addon1">/var/www/app/files/</span>
+                    <input type="text" class="form-control border-primary shadow-sm" id="payload" name="payload" placeholder="Enter a filename to access" style="font-size: 1.1rem;" aria-describedby="fileHelp">
+                </div>
+                <div id="fileHelp" class="form-text text-muted">This form simulates a file access utility that could be vulnerable to path traversal.</div>
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input border-primary" type="checkbox" id="aiToggle" checked style="width: 1.5rem; height: 1.5rem;">
+                <label class="form-check-label fw-bold fs-5 ms-2 text-primary" for="aiToggle">Enable AI Protection</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-3 fs-4 fw-bold shadow">
+                <i class="fas fa-file me-2"></i> Access File
+            </button>
+        </form>
+    </div>
+    
+    <div id="payloadDisplay" class="payload-display d-none mt-4 fs-4 p-4 shadow-lg"></div>
+    
+    <div id="fileResultContainer" class="mt-4 d-none">
+        <div class="card p-4 shadow-lg border-0">
+            <div class="card-header bg-warning text-dark fw-bold fs-4 mb-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fas fa-file-alt me-2"></i> File Access Result (Simulated)
+                </div>
+                <div class="badge bg-dark text-warning">Server: vulnerable-server</div>
+            </div>
+            <div class="card-body p-0">
+                <div id="fileOutput" class="bg-dark text-light p-3 rounded" style="min-height: 200px; font-family: 'Courier New', monospace; overflow-x: auto;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card p-4 shadow-lg border-0 mt-4">
+        <div class="card-header bg-dark text-warning fw-bold fs-4 mb-3 border-0">
+            <i class="fas fa-shield-alt me-2"></i> Path Traversal Prevention
+        </div>
+        <div class="card-body">
+            <p class="fs-5">To protect against path traversal attacks, consider the following measures:</p>
+            <ul class="fs-5">
+                <li>Normalize file paths before validating them</li>
+                <li>Use a whitelist of allowed files/directories</li>
+                <li>Avoid passing user-supplied input to filesystem operations</li>
+                <li>Implement proper input validation and canonicalization</li>
+                <li>Use framework/language-specific file access APIs that limit directory access</li>
+                <li>Apply appropriate permissions to prevent unauthorized access to critical files</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('pathTraversalForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const payload = document.getElementById('payload').value;
+        const aiToggle = document.getElementById('aiToggle').checked;
+        
+        // Show loading indicator
+        const payloadDisplay = document.getElementById('payloadDisplay');
+        payloadDisplay.classList.remove('d-none');
+        payloadDisplay.textContent = "Analyzing file path...";
+        payloadDisplay.className = 'payload-display alert alert-info mt-4 fs-4 p-4 shadow-lg';
+        
+        // Hide previous file results
+        document.getElementById('fileResultContainer').classList.add('d-none');
+        const fileOutput = document.getElementById('fileOutput');
+        fileOutput.innerHTML = '';
+        
+        if (!aiToggle) {
+            // Display warning
+            payloadDisplay.textContent = "⚠️ AI protection is disabled! Simulating file access without protection. ⚠️";
+            payloadDisplay.className = 'payload-display alert alert-warning mt-4 fs-4 p-4 shadow-lg';
+            
+            // Show file result container
+            const fileResultContainer = document.getElementById('fileResultContainer');
+            fileResultContainer.classList.remove('d-none');
+            
+            // Check for path traversal patterns
+            const hasTraversal = /(\.\.|\/\/|\\\\|%2e%2e|%252e%252e)/i.test(payload);
+            const hasSystemPaths = /(\/etc\/|\/var\/|\/root\/|\/home\/|C:\\Windows\\|C:\\Program Files\\|system32|boot\.ini)/i.test(payload);
+            
+            // Simulate file access
+            let output = '';
+            const fullPath = '/var/www/app/files/' + payload;
+            
+            fileOutput.innerHTML += `<div class="mb-2 text-warning"># Attempting to access: ${fullPath}</div>`;
+            
+            if (hasTraversal || hasSystemPaths) {
+                // Simulate successful path traversal
+                if (payload.includes('../') && payload.includes('passwd')) {
+                    output += `# Path traversal successful!\n\nroot:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\ngames:x:5:60:games:/usr/games:/usr/sbin/nologin\nman:x:6:12:man:/var/cache/man:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\n`;
+                } else if ((payload.includes('../') || payload.includes('..\\')) && payload.toLowerCase().includes('hosts')) {
+                    output += `# Path traversal successful!\n\n127.0.0.1 localhost\n127.0.1.1 vulnerable-server\n\n# The following lines are desirable for IPv6 capable hosts\n::1     ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\n`;
+                } else if (payload.toLowerCase().includes('shadow')) {
+                    output += `# Path traversal successful!\n\nroot:$6$xyz$1234abcd/:18937:0:99999:7:::\ndaemon:*:18113:0:99999:7:::\nbin:*:18113:0:99999:7:::\nsys:*:18113:0:99999:7:::\nsync:*:18113:0:99999:7:::\n`;
+                } else if (payload.toLowerCase().includes('config') || payload.toLowerCase().includes('.ini') || payload.toLowerCase().includes('.conf')) {
+                    output += `# Path traversal successful!\n\n[database]\nhost = localhost\nusername = db_user\npassword = db_password_123\ndbname = application_db\n\n[security]\nsecret_key = a1b2c3d4e5f6g7h8i9j0\n`;
+                } else {
+                    output += `# Path traversal attempt detected!\n\nFailed to access ${fullPath}\nAccess denied. This incident has been logged.\n`;
+                }
+            } else {
+                // Normal file access for safe input
+                if (payload.toLowerCase().includes('.txt')) {
+                    output += `This is a sample text file.\nWelcome to our web application.\nThis file is safe to access within the permitted directory.\n`;
+                } else if (payload.toLowerCase().includes('.md')) {
+                    output += `# README\n\n## Welcome to the application\n\nThis is documentation for authorized users.\n`;
+                } else if (payload === "" || payload === "/") {
+                    output += `Directory listing denied. Please specify a file name.`;
+                } else {
+                    output += `Error: File "${payload}" not found in /var/www/app/files/`;
+                }
+            }
+            
+            // Add output line by line with delay for effect
+            const lines = output.split('\n');
+            let i = 0;
+            
+            function addLine() {
+                if (i < lines.length) {
+                    fileOutput.innerHTML += lines[i] + '\n';
+                    fileOutput.scrollTop = fileOutput.scrollHeight;
+                    i++;
+                    setTimeout(addLine, 100);
+                }
+            }
+            
+            addLine();
+            return;
+        }
+        
+        // AI Protection is enabled
+        fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload }),
+        })
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => ({ data, isJson: true }));
+                } else {
+                    return response.text().then(text => ({ data: text, isJson: false }));
+                }
+            })
+            .then(result => {
+                payloadDisplay.classList.remove('d-none');
+                
+                if (result.isJson) {
+                    // Handle JSON response
+                    const data = result.data;
+                    payloadDisplay.textContent = data.message;
+                    payloadDisplay.className = data.status === 'malicious' 
+                        ? 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg' 
+                        : 'payload-display alert alert-success mt-4 fs-4 p-4 shadow-lg';
+                    
+                    // If safe, show simulated file output
+                    if (data.status === 'safe') {
+                        // Show file result container
+                        const fileResultContainer = document.getElementById('fileResultContainer');
+                        fileResultContainer.classList.remove('d-none');
+                        
+                        // Generate safe file output
+                        const fullPath = '/var/www/app/files/' + payload;
+                        fileOutput.innerHTML += `<div class="mb-2 text-warning"># Attempting to access: ${fullPath}</div>`;
+                        
+                        let output = '';
+                        if (payload.toLowerCase().includes('.txt')) {
+                            output += `This is a sample text file.\nWelcome to our web application.\nThis file is safe to access within the permitted directory.\n`;
+                        } else if (payload.toLowerCase().includes('.md')) {
+                            output += `# README\n\n## Welcome to the application\n\nThis is documentation for authorized users.\n`;
+                        } else if (payload === "" || payload === "/") {
+                            output += `Directory listing denied. Please specify a file name.`;
+                        } else {
+                            output += `Error: File "${payload}" not found in /var/www/app/files/`;
+                        }
+                        
+                        // Add output line by line with delay for effect
+                        const lines = output.split('\n');
+                        let i = 0;
+                        
+                        function addLine() {
+                            if (i < lines.length) {
+                                fileOutput.innerHTML += lines[i] + '\n';
+                                fileOutput.scrollTop = fileOutput.scrollHeight;
+                                i++;
+                                setTimeout(addLine, 100);
+                            }
+                        }
+                        
+                        addLine();
+                    }
+                } else {
+                    // Handle non-JSON response
+                    payloadDisplay.textContent = "Server returned an invalid response format. The server might be experiencing issues.";
+                    payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+                    console.error('Non-JSON response:', result.data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                payloadDisplay.textContent = "Error analyzing payload: " + error.message;
+                payloadDisplay.className = 'payload-display alert alert-danger mt-4 fs-4 p-4 shadow-lg';
+            });
+    });
+</script>
+
+<style>
+    .payload-display {
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .alert-info {
+        background-color: rgba(76, 175, 80, 0.1);
+        border-color: #4caf50;
+        color: #e0e0e0;
+    }
+    
+    .alert-success {
+        background-color: rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+    
+    .alert-danger {
+        background-color: rgba(244, 67, 54, 0.2);
+        border-color: #f44336;
+        color: #f44336;
+    }
+    
+    .alert-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+    
+    .form-check-input:checked {
+        background-color: #4caf50;
+        border-color: #4caf50;
+    }
+    
+    #fileOutput {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+    
+    .card-header {
+        border-radius: 8px !important;
+    }
+    
+    code {
+        background-color: #2a2a2a;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+    
+    .input-group-text {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

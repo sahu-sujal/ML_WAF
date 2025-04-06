@@ -56,6 +56,10 @@ def iframe_injection():
 def command_injection():
     return render_template('command_injection.html', title="Command Injection Protection")
 
+@app.route('/path-traversal')
+def path_traversal():
+    return render_template('path_traversal.html', title="Path Traversal Protection")
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
