@@ -2,13 +2,28 @@ from flask import Flask, request, render_template, jsonify
 import pandas as pd
 import numpy as np
 import string
-import joblib
+from tensorflow.keras.models import load_model
+import pickle
 
-sql_keywords = pd.read_csv('static/SQLKeywords.txt', index_col=False)
-js_keywords = pd.read_csv("static/JavascriptKeywords.txt", index_col=False)
 
-# Load the pre-trained model
-xgb_classifier = joblib.load('model/xgb_classifier.pkl')
+# Loading keyword files
+try:
+    sql_keywords = pd.read_csv('static/SQLKeywords.txt', index_col=False)
+    js_keywords = pd.read_csv('static/JavascriptKeywords.txt', index_col=False)
+except FileNotFoundError as e:
+    print(f"Error: {e}. Please ensure SQLKeywords.txt and JavascriptKeywords.txt are in static/")
+    raise
+
+# Load the pre-trained deep learning model and scaler
+model = load_model('model/firewall_model.h5')
+with open('model/scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
+
+# Define numerical columns in the same order as during training
+numerical_columns = [
+    'length', 'non-printable', 'punctuation', 'min-byte', 'max-byte',
+    'mean-byte', 'std-byte', 'distinct-byte', 'sql-keywords', 'js-keywords'
+]
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -20,16 +35,32 @@ def calculate_features_and_predict(payload):
     features['length'] = len(payload)
     features['non-printable'] = len([1 for letter in payload if letter not in string.printable])
     features['punctuation'] = len([1 for letter in payload if letter in string.punctuation])
-    features['min-byte'] = min(bytearray(payload, 'utf-8'))
-    features['max-byte'] = max(bytearray(payload, 'utf-8'))
-    features['mean-byte'] = np.mean(bytearray(payload, 'utf-8'))
-    features['std-byte'] = np.std(bytearray(payload, 'utf-8'))
-    features['distinct-byte'] = len(set(bytearray(payload, 'utf-8')))
+    try:
+        byte_array = bytearray(payload, 'utf-8')
+        features['min-byte'] = min(byte_array) if byte_array else 0
+        features['max-byte'] = max(byte_array) if byte_array else 0
+        features['mean-byte'] = np.mean(byte_array) if byte_array else 0
+        features['std-byte'] = np.std(byte_array) if byte_array else 0
+        features['distinct-byte'] = len(set(byte_array))
+    except UnicodeEncodeError:
+        features['min-byte'] = 0
+        features['max-byte'] = 0
+        features['mean-byte'] = 0
+        features['std-byte'] = 0
+        features['distinct-byte'] = 0
     features['sql-keywords'] = len([1 for keyword in sql_keywords['Keyword'] if str(keyword).lower() in payload.lower()])
     features['js-keywords'] = len([1 for keyword in js_keywords['Keyword'] if str(keyword).lower() in payload.lower()])
-    payload_df = pd.DataFrame(features, index=[0])
-    result = xgb_classifier.predict(payload_df)
-    return result[0]
+    
+    # Creating DataFrame with features in correct order
+    payload_df = pd.DataFrame(features, index=[0])[numerical_columns]
+    
+    # Scaling the features
+    payload_scaled = scaler.transform(payload_df)
+    
+    # Predicting with the deep learning model
+    proba = model.predict(payload_scaled, verbose=0)[0][0]
+    result = 1 if proba > 0.5 else 0
+    return result
 
 # Define routes
 @app.route('/')
